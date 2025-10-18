@@ -1,10 +1,5 @@
 import { BaseModel } from 'src/common/models/base.model';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { Studio } from './studio.entity';
 import { Producer } from './producer.entity';
 

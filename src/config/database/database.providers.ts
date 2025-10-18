@@ -20,7 +20,7 @@ export const databaseProviders = [
           ),
         ],
         synchronize: true,
-        namingStrategy: new SnakeNamingStrategy()
+        namingStrategy: new SnakeNamingStrategy(),
       });
 
       return dataSource.initialize();

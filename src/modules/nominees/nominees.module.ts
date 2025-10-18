@@ -11,9 +11,11 @@ import { detectDelimiter, stringToArray, toBoolean } from 'src/common/utils';
 import { Producer } from './entities/producer.entity';
 import { Studio } from './entities/studio.entity';
 import { MovieCsvRow } from './interfaces/nominee-csv.interface';
+import { NomineesController } from './nominees.controller';
 
 @Module({
   imports: [DatabaseModule],
+  controllers: [NomineesController],
   providers: [...nomineeProviders, NomineesService],
 })
 export class NomineesModule implements OnApplicationBootstrap {
@@ -33,7 +35,7 @@ export class NomineesModule implements OnApplicationBootstrap {
   }
 
   async loadCsv() {
-    const filePath = path.resolve(process.cwd(), 'Movielist.csv')
+    const filePath = path.resolve(process.cwd(), 'Movielist.csv');
     const firstLine = fs.readFileSync(filePath, 'utf8').split('\n')[0];
     const delimiter = detectDelimiter(firstLine);
 

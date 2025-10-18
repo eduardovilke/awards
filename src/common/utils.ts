@@ -27,4 +27,4 @@ export const detectDelimiter = (line: string): string => {
 
   const best = counts.reduce((a, b) => (a.count > b.count ? a : b));
   return best.delimiter;
-}
+};
