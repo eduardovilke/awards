@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { Nominee } from "./nominee.entity";
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Nominee } from './entities/nominee.entity';
 
 @Injectable()
 export class NomineesService {
