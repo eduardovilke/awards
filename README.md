@@ -6,8 +6,8 @@ Uma API **NestJS** que importa dados de `Movielist.csv` para um banco **SQLite**
 
 ## 📂 Arquivos relevantes
 
-- `Movielist.csv` — CSV importado na inicialização
-- `src/modules/nominees/nominees.module.ts` - Carregamento do arquivo `Movielist.csv` e importado no banco de dados
+- `Movielist.csv` — CSV importado na inicialização.
+- `src/modules/nominees/nominees.module.ts` - Carregamento do arquivo `Movielist.csv` e importado no banco de dados.
 
 ---
 
@@ -69,5 +69,5 @@ docker compose up spec
 
 - O banco usado é SQLite (arquivo como `db.sqlite`) conforme configuração do projeto.
 - O CSV `Movielist.csv` é importado automaticamente na inicialização.
-- Para testar a aplicação com outra base de dados, basta trocar o arquivo `Movielist.csv` por outro.
+- Para testar a aplicação com outra base de dados, basta trocar o arquivo `Movielist.csv` por outro de sua preferência.
 - As tabelas do banco de dados são criadas no momento em que o projeto sobe, dado pela configuração `synchronize: true`, no arquivo `src/app.module.ts` evitando a necessidade de arquivos de migrations (desaconselhado em ambientes de produção).
