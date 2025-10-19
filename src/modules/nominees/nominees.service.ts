@@ -70,8 +70,8 @@ export class NomineesService {
               const obj = {
                 producer: curr.producer,
                 interval: i.interval,
-                previousWin: i.from,
-                followingWin: i.to,
+                previousWin: i.to,
+                followingWin: i.from,
               };
 
               if (!acc.min.length || i.interval < acc.min[0].interval) {
