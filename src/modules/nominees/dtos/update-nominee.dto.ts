@@ -8,7 +8,10 @@ export class UpdateNomineeDto {
   @Min(1900)
   year?: number;
 
-  @ApiPropertyOptional({ example: 'Batman & Robin', description: 'Title of the movie' })
+  @ApiPropertyOptional({
+    example: 'Batman & Robin',
+    description: 'Title of the movie',
+  })
   @IsOptional()
   @IsString()
   title?: string;

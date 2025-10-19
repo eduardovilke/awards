@@ -1,18 +1,19 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { Nominee } from './entities/nominee.entity';
 import { Producer } from './entities/producer.entity';
 import { NomineeResponseDto } from './dtos/nominee-response.dto';
 import { instanceToPlain } from 'class-transformer';
 import { NomineesQueryDto } from './dtos/nominees-query.dto';
 import { UpdateNomineeDto } from './dtos/update-nominee.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class NomineesService {
   constructor(
-    @Inject('NOMINEE_REPOSITORY')
+    @InjectRepository(Nominee)
     private nomineeRepository: Repository<Nominee>,
-    @Inject('PRODUCER_REPOSITORY')
+    @InjectRepository(Producer)
     private producerRepository: Repository<Producer>,
   ) {}
 
@@ -24,7 +25,7 @@ export class NomineesService {
   }
 
   async update(id: string, updateDto: UpdateNomineeDto) {
-    const nominee = await this.nomineeRepository.findOneBy({  id });
+    const nominee = await this.nomineeRepository.findOneBy({ id });
     if (!nominee) throw new NotFoundException(`Nominee ${id} not found`);
 
     Object.assign(nominee, updateDto);

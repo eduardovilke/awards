@@ -1,7 +1,5 @@
-import { Inject, Module, OnApplicationBootstrap } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { NomineesService } from './nominees.service';
-import { nomineeProviders } from './nominee.providers';
-import { DatabaseModule } from 'src/config/database/database.module';
 import { Nominee } from './entities/nominee.entity';
 import { Repository } from 'typeorm';
 import * as path from 'path';
@@ -12,19 +10,20 @@ import { Producer } from './entities/producer.entity';
 import { Studio } from './entities/studio.entity';
 import { MovieCsvRow } from './interfaces/nominee-csv.interface';
 import { NomineesController } from './nominees.controller';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Nominee, Producer, Studio])],
   controllers: [NomineesController],
-  providers: [...nomineeProviders, NomineesService],
+  providers: [NomineesService],
 })
 export class NomineesModule implements OnApplicationBootstrap {
   constructor(
-    @Inject('NOMINEE_REPOSITORY')
+    @InjectRepository(Nominee)
     private nomineeRepository: Repository<Nominee>,
-    @Inject('PRODUCER_REPOSITORY')
+    @InjectRepository(Producer)
     private producerRepository: Repository<Producer>,
-    @Inject('STUDIO_REPOSITORY')
+    @InjectRepository(Studio)
     private studioRepository: Repository<Studio>,
   ) {}
 

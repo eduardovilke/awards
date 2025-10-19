@@ -13,7 +13,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
-  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 import { AwardsIntervalsResponseDto } from './dtos/awards-intervals.dto';
@@ -62,10 +61,7 @@ export class NomineesController {
   @Put(':id')
   @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({ type: NomineeResponseDto })
-  async update(
-    @Param('id') id: string,
-    @Body() updateDto: UpdateNomineeDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateDto: UpdateNomineeDto) {
     const nomineeUpdated = await this.nomineesService.update(id, updateDto);
 
     return instanceToPlain(new NomineeResponseDto(nomineeUpdated));
