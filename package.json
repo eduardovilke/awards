@@ -1,9 +1,10 @@
 {
-  "name": "nest-typescript-starter",
+  "name": "awards",
   "private": true,
   "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
+  "description": "API that lists the nominees and winners of the Worst Movie category of the Golden Raspberry Awards",
   "license": "MIT",
+  "author": "Eduardo Vilke <eduardo.svilke@gmail.com>",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
