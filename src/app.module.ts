@@ -8,7 +8,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'db.sqlite',
+      database: ':memory:',
       entities: [path.resolve(__dirname, 'modules', '**', '*.entity.{t,j}s')],
       synchronize: true,
       namingStrategy: new SnakeNamingStrategy(),
