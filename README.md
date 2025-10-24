@@ -140,6 +140,6 @@ Os exemplos usam `http://localhost:3000` como base.
 
 ## 🗒️ Observações
 
-- O banco usado é SQLite, conforme definido no desafio.
+- O banco usado é SQLite em memória, conforme definido no desafio.
 - Para testar a aplicação com outra base de dados, basta trocar o arquivo `Movielist.csv` por outro de sua preferência.
 - As tabelas do banco de dados são criadas no momento em que o projeto sobe, dado pela configuração `synchronize: true`, no arquivo `src/app.module.ts` evitando a necessidade de arquivos de migrations (evitar uso em ambientes de produção).
