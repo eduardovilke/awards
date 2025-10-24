@@ -4,7 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { Nominee } from 'src/modules/nominees/entities/nominee.entity';
 import { Repository } from 'typeorm';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppModule } from 'src/app.module';
 
 describe('NomineeController (e2e)', () => {
@@ -187,30 +187,29 @@ describe('NomineeController (e2e)', () => {
   });
 
   it('/awards-intervals (GET)', () => {
+    const expectedResponse = {
+      min: [
+        {
+          producer: 'Joel Silver',
+          interval: 1,
+          previousWin: 1990,
+          followingWin: 1991,
+        },
+      ],
+      max: [
+        {
+          producer: 'Matthew Vaughn',
+          interval: 13,
+          previousWin: 2002,
+          followingWin: 2015,
+        },
+      ],
+    };
     return request(app.getHttpServer())
       .get('/nominees/awards-intervals')
       .expect(200)
       .expect((response) => {
-        expect(response.body).toMatchObject(
-          expect.objectContaining({
-            min: expect.arrayContaining([
-              expect.objectContaining({
-                producer: expect.any(String),
-                interval: expect.any(Number),
-                previousWin: expect.any(Number),
-                followingWin: expect.any(Number),
-              }),
-            ]),
-            max: expect.arrayContaining([
-              expect.objectContaining({
-                producer: expect.any(String),
-                interval: expect.any(Number),
-                previousWin: expect.any(Number),
-                followingWin: expect.any(Number),
-              }),
-            ]),
-          }),
-        );
+        expect(response.body).toEqual(expectedResponse);
       });
   });
 });
