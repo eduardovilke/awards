@@ -12,6 +12,8 @@ import { MovieCsvRow } from './interfaces/nominee-csv.interface';
 import { NomineesController } from './nominees.controller';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 
+import { Writable } from 'stream';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Nominee, Producer, Studio])],
   controllers: [NomineesController],
@@ -38,50 +40,56 @@ export class NomineesModule implements OnApplicationBootstrap {
     const firstLine = fs.readFileSync(filePath, 'utf8').split('\n')[0];
     const delimiter = detectDelimiter(firstLine);
 
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       fs.createReadStream(filePath)
         .pipe(csv.parse({ headers: true, delimiter, trim: true }))
-        .on('data', async (row: MovieCsvRow) => {
-          const producers = await Promise.all(
-            stringToArray(row.producers).map(async (name) => {
-              await this.producerRepository.upsert({ name }, ['name']);
+        .pipe(
+          new Writable({
+            objectMode: true,
+            write: async (row: MovieCsvRow, _, callback) => {
+              try {
+                const producers = await Promise.all(
+                  stringToArray(row.producers).map(async (name) => {
+                    await this.producerRepository.upsert({ name }, ['name']);
+                    return this.producerRepository.findOneBy({ name });
+                  }),
+                );
 
-              return this.producerRepository.findOneBy({ name });
-            }),
-          );
+                const studios = await Promise.all(
+                  stringToArray(row.studios).map(async (name) => {
+                    await this.studioRepository.upsert({ name }, ['name']);
+                    return this.studioRepository.findOneBy({ name });
+                  }),
+                );
 
-          const studios = await Promise.all(
-            stringToArray(row.studios).map(async (name) => {
-              await this.studioRepository.upsert({ name }, ['name']);
+                const newNominee = this.nomineeRepository.create({
+                  title: row.title,
+                  year: +row.year,
+                  isWinner: toBoolean(row.winner),
+                  producers,
+                  studios,
+                });
 
-              return this.studioRepository.findOneBy({ name });
-            }),
-          );
+                const nomineeExists = await this.nomineeRepository.findOneBy({
+                  title: newNominee.title,
+                  year: newNominee.year,
+                });
 
-          const newNominee = this.nomineeRepository.create({
-            title: row.title,
-            year: +row.year,
-            isWinner: toBoolean(row.winner),
-            producers,
-            studios,
-          });
+                if (!nomineeExists) {
+                  await this.nomineeRepository.save(newNominee);
+                }
 
-          const nomineeExists = await this.nomineeRepository.findOneBy({
-            title: newNominee.title,
-            year: newNominee.year,
-          });
-
-          if (nomineeExists) return;
-
-          await this.nomineeRepository.save(newNominee);
-        })
+                callback();
+              } catch (err) {
+                callback(err);
+              }
+            },
+          }),
+        )
+        .on('finish', () => resolve())
         .on('error', (err) => {
-          console.error('Error reading CSV ❌: ', err.message);
-          resolve(false);
-        })
-        .on('end', (rowCount: number) => {
-          console.log(`${rowCount} lines processed! 🚀`);
-          resolve(true);
+          console.error('Error reading CSV ❌:', err.message);
+          reject(err);
         });
     });
   }
